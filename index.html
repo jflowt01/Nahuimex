@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NahuiMex - Turismo Inteligente</title>
+  <meta name="description" content="Simula reservas de cenotes y experiencias naturales con NahuiMex. Turismo inteligente, moderno y sostenible.">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      color: #222;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, #FF5722, #4CAF50);
+      color: white;
+      padding: 1.2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+    }
+
+    nav a {
+      color: white;
+      margin-left: 2rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #e3f2fd;
+    }
+
+    .hero {
+      background:url('images/back.jpg') center/cover no-repeat; 
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      padding: 2rem;
+      animation: fadeInUp 1.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-primary {
+      background-color: #4CAF50;
+      color: white;
+      padding: 0.9rem 2rem;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary:hover {
+      background-color: #FF5722;
+      transform: scale(1.05);
+    }
+
+    main {
+      margin-top: 100px;
+      padding: 2rem 10%;
+    }
+
+    .search-section {
+      text-align: center;
+      background: white;
+      padding: 3rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 3rem;
+    }
+
+    .search-section input, select {
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 200px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .card:hover { transform: translateY(-8px); }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .occupancy {
+      margin: 0.5rem 0;
+      height: 10px;
+      border-radius: 5px;
+      background: #e0e0e0;
+      overflow: hidden;
+    }
+
+    .occupancy-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4CAF50, #FF5722);
+    }
+
+    .route-link {
+      color: #FF5722;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer {
+      background: linear-gradient(135deg, #FF5722, #4CAF50);
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      display: none;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      width: 350px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NahuiMex</h1>
+    <nav>
+      <a href="#">Inicio</a>
+      <a href="#search">Reservas</a>
+      <a href="#contact">Contacto</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Explora los lugares más impresionantes de Chiapas</h2>
+      <p>Reserva de forma fácil, rápida y segura. Vive una experiencia única con NahuiMex.</p>
+      <button class="btn-primary" onclick="scrollToSection('search')">Buscar Ahora</button>
+    </div>
+  </section>
+
+  <main id="search">
+    <section class="search-section">
+      <h2>Encuentra tu próxima aventura</h2>
+      <div>
+        <input type="text" id="searchInput" placeholder="Buscar lugar...">
+        <select id="filterSelect">
+          <option value="todos">Todos</option>
+          <option value="Universidad">Universidad</option>
+          <option value="Parque">Parque</option>
+          <option value="Rios">Rios</option>
+          <option value="Cabañas">Cabañas</option>
+        </select>
+        <button class="btn-primary" onclick="filterResults()">Buscar</button>
+      </div>
+    </section>
+
+    <section class="results-grid" id="results">
+      <!-- Resultados dinámicos -->
+    </section>
+  </main>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3>✅ Reserva exitosa</h3>
+      <p>Tu reserva ha sido confirmada. Recibirás un correo con los detalles.</p>
+      <button class="btn-primary" onclick="closeModal()">Cerrar</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 NahuiMex. Todos los derechos reservados. | Turismo Inteligente</p>
+  </footer>
+
+  <script>
+    const lugares = [
+      { nombre: 'Rio Sangre', tipo: 'Rios', img: 'images/sangre.jpg', ocupacion: 80, ruta: 'https://www.google.com/maps/place/Cenote+Suytun/@20.6880793,-88.1759604' },
+      { nombre: 'Siempre Verde', tipo: 'Cabañas', img: 'images/verde.jpeg', ocupacion: 65, ruta: 'https://www.google.com/maps/place/Cenote+Xkeken/@20.6667926,-88.1926692' },
+      { nombre: 'El Diamante', tipo: 'Cabañas', img: 'images/diamante.jpg', ocupacion: 50, ruta: 'https://www.google.com/maps/place/Cenote+Samula/@20.6669342,-88.1926984' },
+      {nombre: 'Universida Linda Vista' , tipo: 'Universidad', img: 'images/ulv.jpeg', ocupacion: 80, ruta: 'https://www.google.com/maps/place/Cenote+Samula/@20.6669342,-88.1926984'},
+      {nombre: 'Yerbabuena' , tipo: 'Cabaña', img: 'images/yerba.jpg', ocupacion: 50, ruta: 'https://www.google.com/maps/place/Cenote+Samula/@20.6669342,-88.1926984'},
+      {nombre: 'Rancho Nuevo' , tipo: 'Parque', img: 'images/rancho.jpg', ocupacion: 90, ruta: 'https://www.google.com/maps/place/Cenote+Samula/@20.6669342,-88.1926984'}
+    ];
+
+    function renderResults(list) {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+      list.forEach(lugar => {
+        container.innerHTML += `
+          <div class="card">
+            <img src="${lugar.img}" alt="${lugar.nombre}">
+            <div class="card-body">
+              <h3>${lugar.nombre}</h3>
+              <p>${lugar.tipo}</p>
+              <div class="occupancy"><div class="occupancy-fill" style="width:${lugar.ocupacion}%;"></div></div>
+              <p>${lugar.ocupacion}% ocupado</p>
+              <a class="route-link" href="${lugar.ruta}" target="_blank">Ver ruta ➜</a><br><br>
+              <button class="btn-primary" onclick="openModal()">Reservar</button>
+            </div>
+          </div>`;
+      });
+    }
+
+    function filterResults() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filter = document.getElementById('filterSelect').value;
+      const filtered = lugares.filter(l => 
+        (filter === 'todos' || l.tipo === filter) && l.nombre.toLowerCase().includes(query)
+      );
+      renderResults(filtered);
+    }
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function openModal() {
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    renderResults(lugares);
+  </script>
+</body>
+</html>
